@@ -34,7 +34,7 @@
                     <property name="can_focus">True</property>
                     <property name="action_name">Ondra</property>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="titleLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Contact list</property>
@@ -133,9 +133,30 @@
             <property name="orientation">vertical</property>
             <property name="baseline_position">top</property>
             <child>
-              <object class="GtkTextView">
+              <object class="GtkButton" id="button">
+                <property name="label" translatable="yes">Send message</property>
+                <property name="name">button</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="image_position">bottom</property>
+                <signal name="clicked" handler="onButtonPressed" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="padding">5</property>
+                <property name="pack_type">end</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkTextView" id="chatWindow">
+                <property name="name">chatWindow</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+                <property name="cursor_visible">False</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -157,25 +178,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="button">
-                <property name="label" translatable="yes">Send message</property>
-                <property name="name">button</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="image_position">bottom</property>
-                <signal name="clicked" handler="onButtonPressed" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="padding">5</property>
-                <property name="pack_type">end</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkEntry" id="message">
+                <property name="name">message</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_stock">gtk-execute</property>
