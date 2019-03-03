@@ -10,6 +10,3 @@ pycodestyle = "*"
 [packages]
 pycairo = "*"
 pygobject = "*"
-
-[requires]
-python_version = "3.7"
