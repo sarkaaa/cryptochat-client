@@ -209,5 +209,8 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/python,pycharm+all
 
-#VSCode
+# VSCode
 .vscode/
+
+# Glade backup files
+cryptochatclient/resources/ui/*~
