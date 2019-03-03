@@ -2,6 +2,12 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
+def run():
+    window = CryptoChat()
+    window.connect("destroy", Gtk.main_quit)
+    window.show_all()
+    Gtk.main()
+
 class CryptoChat(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="CryptoChat")
@@ -43,8 +49,6 @@ class CryptoChat(Gtk.Window):
         vbox_left.pack_start(self.sidebar, True, True, 0)
         vbox_right.pack_start(self.verticalPane, True, True, 0)
 
-        
-
         self.add(hbox)
 
     def btn_clicked(self, widget):
@@ -52,9 +56,3 @@ class CryptoChat(Gtk.Window):
 
     def btn_send(self, widget):
         print ('Message was sent.')
-
-
-window = CryptoChat()
-window.connect("destroy", Gtk.main_quit)
-window.show_all()
-Gtk.main()
