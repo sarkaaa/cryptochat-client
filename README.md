@@ -3,7 +3,7 @@
 - Šárka Chwastková - [sarkaaa](https://github.com/sarkaaa)
 - Ondřej Gajdušek - [ogajduse](https://github.com/ogajduse)
 - Roman Ligocki - [rligocki](https://github.com/rligocki)
-- Roland Dávidík
+- Roland Dávidík - [RolandDavidik](https://github.com/RolandDavidik)
 
 ## Installation
 ### Fedora
