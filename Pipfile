@@ -10,3 +10,5 @@ pycodestyle = "*"
 [packages]
 pycairo = "*"
 pygobject = "*"
+pycrypto = "*"
+"pysha3" = "*"
