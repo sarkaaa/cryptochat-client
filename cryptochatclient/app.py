@@ -1,12 +1,11 @@
 """
-CryptoChat client.
-:param error_text:
-:return:
+CryptoChat client main module.
 """
 import os
 from gi.repository import Gtk
 import gi
 gi.require_version("Gtk", "3.0")
+
 
 class CryptoChat(Gtk.Window):
     """
