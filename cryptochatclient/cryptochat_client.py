@@ -15,23 +15,29 @@ CLIENT_VERSION = os.environ.get('VERSION')
 
 def show_error_and_exit(error_text):
     """
-    
-    :param error_text: 
-    :return: 
+    Show error.
+    :param error_text:
+    :return:
     """
     raise NotImplementedError()
 
-
 def check_requirements():
+    """
+    Check requirements.
+    :param error_text:
+    :return:
+    """
     raise NotImplementedError()
 
-
 def main():
+    """
+    Main function.
+    :param error_text:
+    :return:
+    """
     init_logging()
     LOGGER.info("Starting (version %s).", CLIENT_VERSION)
-    status = app.run()
-    sys.exit(status)
-
+    sys.exit(app.run())
 
 if __name__ == '__main__':
     main()
