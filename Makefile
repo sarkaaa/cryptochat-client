@@ -7,4 +7,4 @@ install-dev:
 	pipenv install --dev
 
 test:
-	pipenv run pycodestyle .
+	pipenv run bash run_tests.sh
