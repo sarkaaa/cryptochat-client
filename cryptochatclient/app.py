@@ -25,25 +25,13 @@ class CryptoChat(Gtk.Window):
         self.builder.add_from_file(glade_file)
         self.builder.connect_signals(self)
 
-        self.login = self.builder.get_object('login_dialog')
-        self.login.show_all()
+        self.login_window = self.builder.get_object('login_dialog')
+        self.login_window.show_all()
 
-        response = self.login.run()
-        if response == Gtk.ResponseType.OK:
-            self.login_input = self.builder.get_object("login_id")
-            input_message_text = self.login_input.get_text()
-            print('Login input', input_message_text)
-            if input_message_text == '1234':
-                print('Login successful')
-                self.login.hide()
-                self.logged()
-            else:
-                print('Error')
-                self.login_input.set_text('')
-        elif response == Gtk.ResponseType.CANCEL:
-            self.login.hide()
-
+        # .signals.row_selected
+        # response = self.login_window.run()
         Gtk.main()
+
 
     def on_destroy(self):
         """
@@ -52,6 +40,23 @@ class CryptoChat(Gtk.Window):
         :return:
         """
         Gtk.main_quit()
+
+    def login(self, arg):
+        """
+        Login function.
+        :param error_text:
+        :returm:
+        """
+        self.login_window = self.builder.get_object('login_dialog')
+        self.login_input = self.builder.get_object("login_id")
+        input_message_text = self.login_input.get_text()
+        if input_message_text == '1234':
+            print('Login successful')
+            self.login_window.hide()
+            self.logged()
+        else:
+            print('Error')
+            self.login_input.set_text('')
 
     def logged(self):
         """
@@ -64,7 +69,7 @@ class CryptoChat(Gtk.Window):
 
     def on_text_view_set(self, input_message):
         """
-        Set the send message in chat window.
+        Set the messages in chat window.
         :param error_text:
         :return:
         """
@@ -85,7 +90,6 @@ class CryptoChat(Gtk.Window):
         self.on_text_view_set(input_message_text)
         return (self.builder.get_object("message").set_text(''), arg)
 
-    # Add contact/new conversation to listbox
     def add_contact(self, input_name, list_name):
         """
         Show dialog for adding new contact/conversation.
@@ -102,7 +106,26 @@ class CryptoChat(Gtk.Window):
         listbox = self.builder.get_object(list_name)
         listbox.add(new_item)
 
-    # Dialog for adding new conversation to list
+    def conversation_enter(self, arg):
+        """
+        Add new conversation to conversation list.
+        :param error_text:
+        :return:
+        """
+        self.add_contact("conversation_text_input", "conversations_list")
+        dialog = self.builder.get_object('dialog_conversation')
+        dialog.hide()
+
+    def contact_enter(self, arg):
+        """
+        Add new contact to contact list.
+        :param error_text:
+        :return:
+        """
+        self.add_contact("contact_id_text_input", "contact_list")
+        dialog = self.builder.get_object('dialog_contact')
+        dialog.hide()
+
     def on_new_conversation_button_pressed(self, arg):
         """
         Add new conversation to conversation list.
@@ -112,30 +135,24 @@ class CryptoChat(Gtk.Window):
         dialog = self.builder.get_object('dialog_conversation')
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-            self.add_contact("conversation_text_input", "conversations_list")
-            dialog.hide()
+            self.conversation_enter(self)
         elif response == Gtk.ResponseType.CANCEL:
             dialog.hide()
-
         return arg
 
-    # Dialog for adding user do contact list
     def on_add_contact_button_pressed(self, arg):
         """
         Add new contact to contact list.
         :param error_text:
         :return:
         """
-        dialog = self.builder.get_object('dialog_add_contact')
+        dialog = self.builder.get_object('dialog_contact')
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-            self.add_contact("contact_id_text_input", "contact_list")
-            dialog.hide()
+            self.contact_enter(self)
         elif response == Gtk.ResponseType.CANCEL:
             dialog.hide()
-
         return arg
-
 
 def run():
     """
