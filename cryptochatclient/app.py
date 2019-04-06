@@ -17,19 +17,17 @@ class CryptoChat(Gtk.Window):
         response = self.login.run()
         if response == Gtk.ResponseType.OK:
             self.loginInput = self.builder.get_object("loginID")
-            print('logiin', self.loginInput)
             inputMessageText = self.loginInput.get_text()
-            print('inpout', inputMessageText)
+            print('Login input', inputMessageText)
             if inputMessageText == '1234':
-                print('fasfd', inputMessageText)
                 print('Login successful')
+                self.login.hide()
                 self.logged()
             else:
                 print('Error')
-                print('fasfd', inputMessageText)
                 self.loginInput.set_text('')
             pass
-            # self.login.hide()
+
         elif response == Gtk.ResponseType.CANCEL:
             self.login.hide()
 
