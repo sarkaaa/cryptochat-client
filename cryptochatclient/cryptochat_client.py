@@ -14,6 +14,11 @@ CLIENT_VERSION = os.environ.get('VERSION')
 
 
 def show_error_and_exit(error_text):
+    """
+    
+    :param error_text: 
+    :return: 
+    """
     raise NotImplementedError()
 
 

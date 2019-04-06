@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkDialog" id="dialogAddContact">
+  <object class="GtkDialog" id="dialog_add_contact">
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
     <child>
@@ -69,7 +69,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="contactIdTextInput">
+              <object class="GtkEntry" id="contact_id_text_input">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -93,7 +93,7 @@
       <action-widget response="-5">button2</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkDialog" id="dialogConversation">
+  <object class="GtkDialog" id="dialog_conversation">
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
     <child>
@@ -160,7 +160,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="conversationTextInput">
+              <object class="GtkEntry" id="conversation_text_input">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -184,7 +184,7 @@
       <action-widget response="-5">conversationOK</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkDialog" id="loginDialog">
+  <object class="GtkDialog" id="login_dialog">
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
     <child>
@@ -258,7 +258,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="loginID">
+          <object class="GtkEntry" id="login_id">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
           </object>
@@ -281,7 +281,7 @@
       <action-widget response="-5">button4</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkWindow" id="window1">
+  <object class="GtkWindow" id="main_window">
     <property name="name">window1</property>
     <property name="can_focus">False</property>
     <property name="default_width">700</property>
@@ -306,7 +306,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="onAddContactButtonPressed" swapped="no"/>
+                <signal name="clicked" handler="on_add_contact_button_pressed" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -322,7 +322,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="image_position">top</property>
-                <signal name="clicked" handler="onNewConversationButtonPressed" swapped="no"/>
+                <signal name="clicked" handler="on_new_conversation_button_pressed" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -337,7 +337,7 @@
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkListBox" id="contactList">
+                  <object class="GtkListBox" id="contact_list">
                     <property name="width_request">19</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -367,7 +367,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkListBox" id="conversationsList">
+                  <object class="GtkListBox" id="conversations_list">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
@@ -439,7 +439,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="image_position">bottom</property>
-                <signal name="clicked" handler="onSendMessageButtonPressed" swapped="no"/>
+                <signal name="clicked" handler="on_send_message_button_pressed" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -450,7 +450,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkTextView" id="chatWindow">
+              <object class="GtkTextView" id="chat_window">
                 <property name="name">chatWindow</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
