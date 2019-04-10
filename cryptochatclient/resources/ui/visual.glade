@@ -24,6 +24,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <signal name="activate" handler="dialog_close" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -116,6 +117,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <signal name="activate" handler="dialog_close" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -346,6 +348,7 @@
                     <property name="width_request">19</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="activate_on_single_click">False</property>
                     <child>
                       <object class="GtkListBoxRow">
                         <property name="width_request">100</property>
@@ -353,6 +356,8 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
+                        <property name="activatable">False</property>
+                        <property name="selectable">False</property>
                         <child>
                           <object class="GtkLabel" id="titleLabel">
                             <property name="visible">True</property>
@@ -400,7 +405,16 @@
                   </packing>
                 </child>
                 <child>
-                  <placeholder/>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">label</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
                 </child>
               </object>
               <packing>

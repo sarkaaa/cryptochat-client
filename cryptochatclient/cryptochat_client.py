@@ -6,8 +6,8 @@ Main cryptochat-client module
 import os
 import sys
 
-import cryptochatclient.app as app
-from cryptochatclient.logging_utils import init_logging, get_logger
+import app
+from logging_utils import init_logging, get_logger
 
 LOGGER = get_logger(__name__)
 CLIENT_VERSION = os.environ.get('VERSION')

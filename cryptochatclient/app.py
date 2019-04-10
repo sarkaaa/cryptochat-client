@@ -32,7 +32,6 @@ class CryptoChat(Gtk.Window):
         # response = self.login_window.run()
         Gtk.main()
 
-
     def on_destroy(self):
         """
         On destroy function.
@@ -97,14 +96,17 @@ class CryptoChat(Gtk.Window):
         :return:
         """
         name = self.builder.get_object(input_name).get_text()
-        self.builder.get_object(input_name).set_text('')
-        label = Gtk.Label()
-        label.set_text(name)
-        new_item = Gtk.ListBoxRow()
-        new_item.add(label)
-        new_item.show_all()
-        listbox = self.builder.get_object(list_name)
-        listbox.add(new_item)
+        if name != '':
+            self.builder.get_object(input_name).set_text('')
+            label = Gtk.Label()
+            label.set_text(name)
+            new_item = Gtk.ListBoxRow()
+            new_item.add(label)
+            new_item.show_all()
+            listbox = self.builder.get_object(list_name)
+            listbox.add(new_item)
+        else:
+            return 1
 
     def conversation_enter(self, arg):
         """
@@ -123,6 +125,10 @@ class CryptoChat(Gtk.Window):
         :return:
         """
         self.add_contact("contact_id_text_input", "contact_list")
+        dialog = self.builder.get_object('dialog_contact')
+        dialog.hide()
+
+    def dialog_close(self):
         dialog = self.builder.get_object('dialog_contact')
         dialog.hide()
 
