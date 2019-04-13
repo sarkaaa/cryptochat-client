@@ -6,7 +6,6 @@ from gi.repository import Gtk
 import gi
 gi.require_version("Gtk", "3.0")
 
-
 class CryptoChat(Gtk.Window):
     """
     CryptoChat client GUI class.
@@ -66,6 +65,12 @@ class CryptoChat(Gtk.Window):
         self.window = self.builder.get_object('main_window')
         self.window.show_all()
 
+    # def load_contacts():
+        #funkce pro nacitani kontaktu z databaze
+    
+    # def load_conversations():
+        #funkce pro nacitani konverzaci z databaze
+
     def on_text_view_set(self, input_message):
         """
         Set the messages in chat window.
@@ -86,27 +91,47 @@ class CryptoChat(Gtk.Window):
         """
         input_message = self.builder.get_object("message")
         input_message_text = input_message.get_text()
+        # TODO: vlozeni zpravy do databaze
         self.on_text_view_set(input_message_text)
         return (self.builder.get_object("message").set_text(''), arg)
 
-    def add_contact(self, input_name, list_name):
+    def add_contact(self, input_id, input_name, list_name):
         """
         Show dialog for adding new contact/conversation.
         :param error_text:
         :return:
         """
+        contact_id = self.builder.get_object(input_id).get_text()
         name = self.builder.get_object(input_name).get_text()
-        if name != '':
-            self.builder.get_object(input_name).set_text('')
+        if name != '' and contact_id != '':
+            # TODO: request do DB s pridanim uzivatele dle jeho id
+            # vypis pridaneho uzivatele v aplikaci
             label = Gtk.Label()
             label.set_text(name)
+            testbla = self.builder.get_object("test_box")
+            testbla.add(label)
+            testbla.show_all()
+        self.builder.get_object(input_name).set_text('')
+        self.builder.get_object(input_id).set_text('')
+
+    def add_contact_conv(self, input_id, list_name):
+        """
+        Show dialog for adding new contact/conversation.
+        :param error_text:
+        :return:
+        """
+        contact_id = self.builder.get_object(input_id).get_text()
+        if contact_id != '':
+            self.builder.get_object(input_id).set_text('')
+            # TODO: request do DB s vytvorenim konverzace s uzivateli
+            # vypis pridane converzace v aplikaci
+            label = Gtk.Label()
+            label.set_text(contact_id)
             new_item = Gtk.ListBoxRow()
             new_item.add(label)
             new_item.show_all()
             listbox = self.builder.get_object(list_name)
             listbox.add(new_item)
-        else:
-            return 1
 
     def conversation_enter(self, arg):
         """
@@ -114,7 +139,7 @@ class CryptoChat(Gtk.Window):
         :param error_text:
         :return:
         """
-        self.add_contact("conversation_text_input", "conversations_list")
+        self.add_contact_conv("conversation_text_input", "conversations_list")
         dialog = self.builder.get_object('dialog_conversation')
         dialog.hide()
 
@@ -124,7 +149,7 @@ class CryptoChat(Gtk.Window):
         :param error_text:
         :return:
         """
-        self.add_contact("contact_id_text_input", "contact_list")
+        self.add_contact("contact_id_text_input", "contact_name_text_input", "contact_list")
         dialog = self.builder.get_object('dialog_contact')
         dialog.hide()
 
@@ -139,7 +164,23 @@ class CryptoChat(Gtk.Window):
         :return:
         """
         dialog = self.builder.get_object('dialog_conversation')
+        contact_list = self.builder.get_object("contact_list")
+        # nacteni kontaktu do dialogu pro vyber uzivatelu do nove konverzace
+        user_list = ['Roland', 'Sarka', 'Ondra', 'Roman']
+        for i in range(0, len(user_list)):
+            label = Gtk.Label()
+            label.set_text(user_list[i])
+            print(user_list[i])
+            print([user_list[i]])
+
+# label = Gtk.Label()
+#             label.set_text(name)
+#             testbla = self.builder.get_object("test_box")
+#             testbla.add(label)
+#             testbla.show_all()
+        
         response = dialog.run()
+        # tmp:
         if response == Gtk.ResponseType.OK:
             self.conversation_enter(self)
         elif response == Gtk.ResponseType.CANCEL:
@@ -159,6 +200,9 @@ class CryptoChat(Gtk.Window):
         elif response == Gtk.ResponseType.CANCEL:
             dialog.hide()
         return arg
+    
+    def test_test(self):
+        print('ahoooj')
 
 def run():
     """
