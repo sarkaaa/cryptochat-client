@@ -27,6 +27,8 @@ class CryptoChat(Gtk.Application):
         self.login_window = self.builder.get_object('login_dialog')
         self.login_window.show_all()
 
+        self.contacts = []
+
         # .signals.row_selected
         # response = self.login_window.run()
         Gtk.main()
@@ -117,11 +119,13 @@ class CryptoChat(Gtk.Application):
         if name != '' and contact_id != '':
             # TODO: request do DB s pridanim uzivatele dle jeho id
             # vypis pridaneho uzivatele v aplikaci
+            self.contacts.append({ "contact_id" : contact_id, "alias" : name, "selected": False })
             label = Gtk.Label()
             label.set_text(name)
             contact_item = self.builder.get_object("contact_list_box")
             contact_item.add(label)
             contact_item.show_all()
+            print('self,', self.contacts)
         self.builder.get_object(input_name).set_text('')
         self.builder.get_object(input_id).set_text('')
 
@@ -152,6 +156,18 @@ class CryptoChat(Gtk.Application):
             listbox.add(new_item)
             listbox.connect('row-activated', self.on_row_activated)
 
+    def change_selected(self, name, value):
+        for i in self.contacts:
+            if i["alias"] == name:
+                i["selected"] = value
+                print('Selected: ', i["selected"])
+
+    def on_toggle(self, button):
+        if button.get_active():
+            self.change_selected(button.get_label(), True)
+        else:
+            self.change_selected(button.get_label(), False)
+
     def on_new_conversation_button_pressed(self, arg):
         """
         Add new conversation to conversation list.
@@ -162,16 +178,20 @@ class CryptoChat(Gtk.Application):
         contact_list_conv = self.builder.get_object("conversation_contact_list")
         # nacteni kontaktu do dialogu pro vyber uzivatelu do nove konverzace
         user_list = ['Roland', 'Sarka', 'Roman', 'Ondra']
-        for i in range(0, len(user_list)):
+        for contact in self.contacts:
             check = Gtk.CheckButton()
-            check.set_label(user_list[i])
+            check.set_label(contact["alias"])
             contact_list_conv.add(check)
+            check.connect("toggled", self.on_toggle)
 
-        conv_name = ', '.join(user_list)
+        
         contact_list_conv.show_all()
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-            check.connect("toggled", self.add_contact_conv)
+            conv_name = ''
+            for i in self.contacts:
+                if i["selected"]:
+                    conv_name += i["alias"] + ', '
             self.add_contact_conv(check, conv_name)
             contact_list_conv.hide()
             dialog.hide()
