@@ -93,10 +93,10 @@ def make_get_request(endpoint, data):
     req = request.Request(full_endpoint,
                           data=data,
                           method='GET')
-    LOGGER.debug('Executing GET request to endpoint "%s" ).', full_endpoint)
+    LOGGER.info('Executing GET request to endpoint "%s".', full_endpoint)
     resp_get = request.urlopen(req).read()
     resp_get_json = json.loads(resp_get)
-    LOGGER.debug('Received response: %s', str(resp_get_json))
+    LOGGER.info('Received response: %s', str(resp_get_json))
     return resp_get_json
 
 
@@ -106,10 +106,10 @@ def make_post_request(endpoint, data):
     req = request.Request(full_endpoint,
                           data=data,
                           method='POST')
-    LOGGER.debug('Executing POST request to endpoint "%s" ).', full_endpoint)
+    LOGGER.info('Executing POST request to endpoint "%s".', full_endpoint)
     resp_post = request.urlopen(req).read()
     resp_post_json = json.loads(resp_post)
-    LOGGER.debug('Received response: %s', str(resp_post_json))
+    LOGGER.info('Received response: "%s"', str(resp_post_json))
     return resp_post_json
 
 
