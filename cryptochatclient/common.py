@@ -146,8 +146,8 @@ def create_contacts(owner_id, user_id, alias, owner_pub_key):
     return resp_post_json
 
 
-def get_contacts(owner_id):
-    data_get = {'owner_id': owner_id}
+def get_contacts(owner_id, owner_priv_key):
+    data_get = {'owner_id': int(owner_id)}
     resp_get_json = make_get_request('/api/contacts', data_get)
     return resp_get_json['contacts']
 
