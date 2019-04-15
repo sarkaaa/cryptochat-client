@@ -24,7 +24,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="activate" handler="dialog_close" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -141,7 +140,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="activate" handler="dialog_close" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -493,17 +491,33 @@
               </packing>
             </child>
             <child>
-              <object class="GtkTextView" id="chat_window">
-                <property name="name">chatWindow</property>
+              <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="editable">False</property>
-                <property name="cursor_visible">False</property>
+                <property name="margin_top">5</property>
+                <property name="margin_bottom">5</property>
+                <property name="shadow_type">in</property>
+                <property name="max_content_width">400</property>
+                <property name="max_content_height">500</property>
+                <property name="propagate_natural_width">True</property>
+                <property name="propagate_natural_height">True</property>
+                <child>
+                  <object class="GtkTextView" id="chat_window">
+                    <property name="name">chatWindow</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="editable">False</property>
+                    <property name="left_margin">5</property>
+                    <property name="right_margin">5</property>
+                    <property name="top_margin">5</property>
+                    <property name="bottom_margin">5</property>
+                    <property name="cursor_visible">False</property>
+                  </object>
+                </child>
               </object>
               <packing>
-                <property name="expand">True</property>
+                <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="padding">5</property>
                 <property name="position">1</property>
               </packing>
             </child>
