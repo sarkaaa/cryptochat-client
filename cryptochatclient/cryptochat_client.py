@@ -11,6 +11,7 @@ from logging_utils import init_logging, get_logger
 
 LOGGER = get_logger(__name__)
 CLIENT_VERSION = os.environ.get('VERSION')
+os.environ['LOGGING_LEVEL'] = "DEBUG"
 
 
 def show_error_and_exit(error_text):
