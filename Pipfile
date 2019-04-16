@@ -11,3 +11,5 @@ pylint = "*"
 [packages]
 pycairo = "*"
 pygobject = "*"
+pycrypto = "*"
+rsa = "*"
