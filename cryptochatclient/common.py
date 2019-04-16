@@ -132,14 +132,14 @@ def send_message(chat_id, sender_id, message,
     encrypted_message = encryption(message, key)
     encrypted_message = bytes2int(encrypted_message)
 
-    hash = hashlib.sha256((str(chat_id) + str(sender_id) + str(encrypted_message)).encode()).digest()
+    hash = hashlib.sha256((str(chat_id) + str(sender_id) + str(encrypted_message)).encode()).hexdigest()
 
-    signedHash = rsa_encryption(hash, owner_private_key)
+    signedHash = bytes2int(rsa_encryption(owner_private_key, hash))
 
     data_post = {'chat_id': int(chat_id),
                  'sender_id': int(sender_id),
                  'message': str(encrypted_message),
-                 'hash': str(signedHash)}
+                 'hash': signedHash}
     resp_post_json = make_post_request('/api/message/new', data_post)
 
     return resp_post_json
