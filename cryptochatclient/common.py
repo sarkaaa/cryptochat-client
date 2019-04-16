@@ -134,7 +134,7 @@ def send_message(chat_id, sender_id, message,
 
     hash = hashlib.sha256((str(chat_id) + str(sender_id) + str(encrypted_message)).encode()).digest()
 
-    signedHash = rsa_signing(hash, owner_private_key)
+    signedHash = rsa_encryption(hash, owner_private_key)
 
     data_post = {'chat_id': int(chat_id),
                  'sender_id': int(sender_id),
