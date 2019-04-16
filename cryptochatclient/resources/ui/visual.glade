@@ -472,25 +472,6 @@
             <property name="orientation">vertical</property>
             <property name="baseline_position">top</property>
             <child>
-              <object class="GtkButton" id="button">
-                <property name="label" translatable="yes">Send message</property>
-                <property name="name">button</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="image_position">bottom</property>
-                <signal name="activate" handler="on_send_message_button_pressed" swapped="no"/>
-                <signal name="clicked" handler="on_send_message_button_pressed" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="padding">5</property>
-                <property name="pack_type">end</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -518,6 +499,20 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="update_messages">
+                <property name="label" translatable="yes">Update messages</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="activate" handler="update_messages" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -534,6 +529,25 @@
               </packing>
             </child>
             <child>
+              <object class="GtkButton" id="button">
+                <property name="label" translatable="yes">Send message</property>
+                <property name="name">button</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="image_position">bottom</property>
+                <signal name="activate" handler="on_send_message_button_pressed" swapped="no"/>
+                <signal name="clicked" handler="on_send_message_button_pressed" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="padding">5</property>
+                <property name="pack_type">end</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkEntry" id="message">
                 <property name="name">message</property>
                 <property name="visible">True</property>
@@ -547,7 +561,7 @@
                 <property name="fill">True</property>
                 <property name="padding">1</property>
                 <property name="pack_type">end</property>
-                <property name="position">3</property>
+                <property name="position">5</property>
               </packing>
             </child>
           </object>

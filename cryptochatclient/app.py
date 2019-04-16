@@ -28,9 +28,13 @@ class CryptoChat(Gtk.Application):
         self.login_window = self.builder.get_object('login_dialog')
         self.login_window.show_all()
 
+<<<<<<< HEAD
+        self.contacts = []
+=======
         self.user_id = None
         self.user_private_key = None
         self.user_public_key = None
+>>>>>>> master
 
         # .signals.row_selected
         # response = self.login_window.run()
@@ -102,6 +106,10 @@ class CryptoChat(Gtk.Application):
         if input_message:
             text_buffer.insert(end_iter, '\n\nMe:\n' + input_message)
 
+    def update_messages(self):
+        # TODO
+        return 0
+
     def on_send_message_button_pressed(self, arg):
         """
         Send message.
@@ -137,40 +145,69 @@ class CryptoChat(Gtk.Application):
             # TODO: pridat kontakty taky do self promenne
             create_contacts(self.user_id, int(contact_id), name, self.user_public_key)
             # vypis pridaneho uzivatele v aplikaci
+            self.contacts.append({ "contact_id" : contact_id, "alias" : name, "selected": False })
             label = Gtk.Label()
             label.set_text(name)
             contact_item = self.builder.get_object("contact_list_box")
             contact_item.add(label)
             contact_item.show_all()
+            print('self,', self.contacts)
         self.builder.get_object(input_name).set_text('')
         self.builder.get_object(input_id).set_text('')
 
-    def on_row_activated(self, listbox, row):
+    def on_row_activated(self, list, arg):
         """
         Show dialog for adding new contact/conversation.
         :param error_text:
         :return:
         """
         print("ahhoooj")
+        return arg
 
-    def add_contact_conv(self, button, conv):
+    def add_contact_conv(self, button):
         """
         Show dialog for adding new contact/conversation.
         :param error_text:
         :return:
         """
-        dialog = self.builder.get_object('dialog_conversation')
+        print('blabla')
+        conv_name = ''
+        for i in self.contacts:
+            if i["selected"]:
+                i["selected"] = False
+                conv_name += i["alias"] + ', '
         if button.get_active():
             # TODO: request do DB s vytvorenim konverzace s uzivateli
             # vypis pridane converzace v aplikaci
             label = Gtk.Label()
-            label.set_text(conv)
+            label.set_text(conv_name)
             new_item = Gtk.ListBoxRow()
             new_item.add(label)
             new_item.show_all()
             listbox = self.builder.get_object("conversations_list")
             listbox.add(new_item)
-            listbox.connect('row-activated', self.on_row_activated)
+            print('new item ', new_item)
+            print('listbox', listbox)
+            listbox.connect('row-activated', lambda widget, row: print('hello world'))
+
+    def change_selected(self, name, value):
+        for i in self.contacts:
+            if i["alias"] == name:
+                i["selected"] = value
+                print('Selected: ', i["selected"])
+
+    def on_toggle(self, button):
+        if button.get_active():
+            self.change_selected(button.get_label(), True)
+        else:
+            self.change_selected(button.get_label(), False)
+
+    def clear_checkbutton_list(self, conversation):
+        print('checkbuttony', self.contacts)
+        children = conversation.get_children();
+        for element in children:
+            if element.get_name() == 'GtkCheckButton':
+               conversation.remove(element);
 
     def on_new_conversation_button_pressed(self, arg):
         """
@@ -178,24 +215,25 @@ class CryptoChat(Gtk.Application):
         :param error_text:
         :return:
         """
+        print('test')
         dialog = self.builder.get_object('dialog_conversation')
         contact_list_conv = self.builder.get_object("conversation_contact_list")
         # nacteni kontaktu do dialogu pro vyber uzivatelu do nove konverzace
-        user_list = ['Roland', 'Sarka', 'Roman', 'Ondra']
-        for i in range(0, len(user_list)):
+        for contact in self.contacts:
             check = Gtk.CheckButton()
-            check.set_label(user_list[i])
+            check.set_label(contact["alias"])
             contact_list_conv.add(check)
+            check.connect("toggled", self.on_toggle)
 
-        conv_name = ', '.join(user_list)
         contact_list_conv.show_all()
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-            check.connect("toggled", self.add_contact_conv)
-            self.add_contact_conv(check, conv_name)
-            contact_list_conv.hide()
+            self.add_contact_conv(check)
+            # contact_list_conv.hide()
+            self.clear_checkbutton_list(contact_list_conv)
             dialog.hide()
         elif response == Gtk.ResponseType.CANCEL:
+            self.clear_checkbutton_list(contact_list_conv)
             dialog.hide()
         return arg
 
@@ -213,9 +251,6 @@ class CryptoChat(Gtk.Application):
         elif response == Gtk.ResponseType.CANCEL:
             dialog.hide()
         return arg
-    
-    def test_test(self):
-        print('ahoooj')
 
 def run():
     """
