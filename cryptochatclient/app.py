@@ -62,6 +62,8 @@ class CryptoChat(Gtk.Application):
         input_login_text = login_input.get_text()
         login_password = self.builder.get_object("login_password")
         input_password_text = login_password.get_text()
+        hash_password = None # TODO vzit z DB u klienta z cache
+        login(input_password_text, hash_password)
         if input_login_text == '1234' and input_password_text == '1234': #1234 se zmeni podle toho, hodnot, ktere se ukladaji do db pro uzivatele
             print('Login successful')
             self.login_window.hide()

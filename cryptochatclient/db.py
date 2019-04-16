@@ -17,7 +17,7 @@ class DB:
         self.query = Query()
 
     def createUser(self, id, publicKey, privateKey):
-        self.db.insert({"type": "account","id": id, "publicKey": publicKey, "privateKey": privateKey})
+        self.db.insert({"type": "account", "id": id, "publicKey": publicKey, "privateKey": privateKey})
 
     def selectUser(self):
         query = Query()
