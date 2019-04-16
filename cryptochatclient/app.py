@@ -5,6 +5,7 @@ import os
 from gi.repository import Gtk
 import gi
 gi.require_version("Gtk", "3.0")
+from cryptochatclient.common import *
 
 class CryptoChat(Gtk.Application):
     """
@@ -26,6 +27,10 @@ class CryptoChat(Gtk.Application):
 
         self.login_window = self.builder.get_object('login_dialog')
         self.login_window.show_all()
+
+        self.user_id = None
+        self.user_private_key = None
+        self.user_public_key = None
 
         # .signals.row_selected
         # response = self.login_window.run()
@@ -71,6 +76,20 @@ class CryptoChat(Gtk.Application):
     # def load_conversations():
         #funkce pro nacitani konverzaci z databaze
 
+    def create_new_user(self, button):
+        user_id = self.builder.get_object("login_id")
+        user_id_text = user_id.get_text()
+        self.user_id = user_id_text
+        if user_id_text:
+            private_key_owner, public_key_owner = rsa_key_generation()
+            self.user_private_key = private_key_owner
+            self.user_public_key = public_key_owner
+            print(user_id_text, public_key_owner)
+            print('Calling API to create user')
+            create_user(self.user_id, self.user_public_key)
+            self.login_window.hide()
+            self.logged()
+
     def on_text_view_set(self, input_message):
         """
         Set the messages in chat window.
@@ -115,7 +134,8 @@ class CryptoChat(Gtk.Application):
         contact_id = self.builder.get_object(input_id).get_text()
         name = self.builder.get_object(input_name).get_text()
         if name != '' and contact_id != '':
-            # TODO: request do DB s pridanim uzivatele dle jeho id
+            # TODO: pridat kontakty taky do self promenne
+            create_contacts(self.user_id, int(contact_id), name, self.user_public_key)
             # vypis pridaneho uzivatele v aplikaci
             label = Gtk.Label()
             label.set_text(name)
