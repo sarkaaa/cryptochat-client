@@ -56,17 +56,15 @@ def rsa_decryption(private_key_of_owner, ciphertext):
 def rsa_signing(private_key_of_owner, block_bits):
     signature = rsa.sign(block_bits.encode('utf8'), private_key_of_owner, 'SHA-512')
 
-    return signature, block_bits.encode('utf8')
+    return signature
 
 
 def rsa_verification(public_key_of_receiver, signature, block_bits):
     boolean_value = rsa.verify(block_bits, signature, public_key_of_receiver)
     if boolean_value:
-        print("podpis sedi, sprava nebyla zmenena")
+        return True
     else:
-        print("chybny podpis")
-
-    return boolean_value, block_bits.decode('utf8')
+        return False
 
 
 def encryption(message_block, key):
@@ -127,13 +125,19 @@ def make_post_request(endpoint, data):
 def send_message(chat_id, sender_id, message,
                  symmetric_key_encrypted_by_own_pub_key, owner_private_key):
     symmetric_key_encrypted_by_own_pub_key = int2bytes(int(symmetric_key_encrypted_by_own_pub_key))
+
     key = rsa_decryption(owner_private_key, symmetric_key_encrypted_by_own_pub_key)
     encrypted_message = encryption(message, key)
     encrypted_message = bytes2int(encrypted_message)
 
+    hash = hashlib.sha256((str(chat_id) + str(sender_id) + str(encrypted_message)).encode()).hexdigest()
+
+    signedHash = bytes2int(rsa_signing(owner_private_key, hash))
+
     data_post = {'chat_id': int(chat_id),
                  'sender_id': int(sender_id),
-                 'message': str(encrypted_message)}
+                 'message': str(encrypted_message),
+                 'hash': signedHash}
     resp_post_json = make_post_request('/api/message/new', data_post)
 
     return resp_post_json
