@@ -223,7 +223,7 @@
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="button3">
+              <object class="GtkButton" id="create_button">
                 <property name="label" translatable="yes">Create a new account</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -323,7 +323,7 @@
       </object>
     </child>
     <action-widgets>
-      <action-widget response="-7">button3</action-widget>
+      <action-widget response="-7">create_button</action-widget>
       <action-widget response="-5">button4</action-widget>
     </action-widgets>
   </object>
@@ -535,7 +535,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="activate" handler="update_messages" swapped="no"/>
+                <signal name="clicked" handler="get_updated_messages" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

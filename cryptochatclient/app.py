@@ -4,6 +4,7 @@ CryptoChat client main module.
 import os
 from gi.repository import Gtk
 import gi
+import random
 
 gi.require_version("Gtk", "3.0")
 from cryptochatclient.common import *
@@ -37,6 +38,10 @@ class CryptoChat(Gtk.Application):
         self.user_private_key = None
         self.user_public_key = None
 
+        my_db = DB()
+        if my_db.user_exist():
+            self.builder.get_object('create_button').set_sensitive(False)
+
         # .signals.row_selected
         # response = self.login_window.run()
         Gtk.main()
@@ -55,17 +60,15 @@ class CryptoChat(Gtk.Application):
         :param error_text:
         :returm:
         """
-        # TODO implemetovat kod pro porovnani id uzivatele a jeho hesla s uzivateli v DB, vlozene id a heslo do textinputu
-        # TODO se uklada do promennych input_login_text a input_password_text
         self.login_window = self.builder.get_object('login_dialog')
-        login_input = self.builder.get_object("login_id")
-        input_login_text = login_input.get_text()
         login_password = self.builder.get_object("login_password")
         input_password_text = login_password.get_text()
-        hash_password = None # TODO vzit z DB u klienta z cache
-        login(input_password_text, hash_password)
-        if input_login_text == '1234' and input_password_text == '1234': #1234 se zmeni podle toho, hodnot, ktere se ukladaji do db pro uzivatele
+        user = login(input_password_text)
+        if user:
             print('Login successful')
+            self.user_id = user['user_id']
+            self.user_private_key = rsa.PrivateKey.load_pkcs1(user['private_key'].encode('ascii'))
+            self.user_public_key = rsa_public_key.load_pkcs1(user['public_key'].encode('ascii'))
             self.login_window.hide()
             self.logged()
         else:
@@ -96,6 +99,9 @@ class CryptoChat(Gtk.Application):
         self.user_password = user_password_text
         if user_id_text and user_password_text:
             private_key_owner, public_key_owner = rsa_key_generation()
+            private_key_owner_str = private_key_owner.save_pkcs1().decode('ascii')
+            public_key_owner_str = public_key_owner.save_pkcs1().decode('ascii')
+            save_user_to_db(self.user_id, public_key_owner_str, private_key_owner_str, self.user_password)
             self.user_private_key = private_key_owner
             self.user_public_key = public_key_owner
             print(user_id_text, public_key_owner)
@@ -121,7 +127,12 @@ class CryptoChat(Gtk.Application):
 
     def update_messages(self):
         # TODO
-        return 0
+        text_view = self.builder.get_object("chat_window")
+        text_buffer = text_view.get_buffer()
+        end_iter = text_buffer.get_end_iter()
+        messages = get_messages()  # TODO
+        if messages:
+            text_buffer.insert(end_iter, messages)
 
     def on_send_message_button_pressed(self, arg):
         """
@@ -132,6 +143,10 @@ class CryptoChat(Gtk.Application):
         input_message = self.builder.get_object("message")
         input_message_text = input_message.get_text()
         # TODO: vlozeni zpravy do databaze
+        #  chat_id, sender_id, message,
+        #                  symmetric_key_encrypted_by_own_pub_key, owner_private_key
+        # send_message(chat_id, self.user_id, input_message_text, symmetric_key_encrypted_by_own_pub_key,
+                    # self.user_private_key)
         self.on_text_view_set(input_message_text)
         return (self.builder.get_object("message").set_text(''), arg)
 
@@ -141,6 +156,7 @@ class CryptoChat(Gtk.Application):
         :param error_text:
         :return:
         """
+        print('kontakts: ', get_contacts(self.user_id, self.user_private_key))
         self.add_contact("contact_id_text_input", "contact_name_text_input")
         dialog = self.builder.get_object('dialog_contact')
         dialog.hide()
@@ -156,6 +172,7 @@ class CryptoChat(Gtk.Application):
         if name != '' and contact_id != '':
             # TODO ulozeni vytvoreneho kontaktu do DB
             create_contacts(self.user_id, int(contact_id), name, self.user_public_key)
+            print('contakty: ',  get_contacts(self.user_id, self.user_private_key))
             self.contacts.append({"contact_id": contact_id, "alias": name, "selected": False})
             label = Gtk.Label()
             label.set_text(name)
@@ -173,7 +190,20 @@ class CryptoChat(Gtk.Application):
         :return:
         """
         # Vyber chatu podle id
-        print('aaa')
+
+        text_view = self.builder.get_object("chat_window")
+        text_buffer = text_view.get_buffer()
+        text_buffer.set_text("")
+        end_iter = text_buffer.get_end_iter()
+        text_buffer.insert(end_iter, "hello world\n" + str(random.randint(1,101)))
+        # end_iter = text_buffer.get_end_iter()
+        # messages = get_messages() # TODO
+        # if messages:
+        #     # text_buffer.insert(end_iter, '\n\nMe:\n' + input_message)
+        #     text_buffer.insert(end_iter, messages)
+
+    def get_updated_messages(self, button):
+        self.on_row_activated()
 
     def add_contact_conv(self, button):
         """
@@ -235,6 +265,7 @@ class CryptoChat(Gtk.Application):
         contact_list_conv.show_all()
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
+
             self.add_contact_conv(check)
             self.clear_checkbutton_list(contact_list_conv)
             dialog.hide()
@@ -252,6 +283,7 @@ class CryptoChat(Gtk.Application):
         dialog = self.builder.get_object('dialog_contact')
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
+            print('kontakts: ', get_contacts(self.user_id, self.user_private_key))
             self.add_contact("contact_id_text_input", "contact_name_text_input")
             dialog.hide()
         elif response == Gtk.ResponseType.CANCEL:
