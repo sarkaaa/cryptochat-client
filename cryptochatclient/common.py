@@ -12,6 +12,7 @@ from rsa.key import PublicKey as rsa_public_key
 from rsa.transform import bytes2int, int2bytes
 
 from cryptochatclient.logging_utils import get_logger
+from cryptochatclient.db import DB
 
 LOGGER = get_logger(__name__)
 
@@ -247,13 +248,27 @@ def decryption(array_ciphertext, key):
 
     return text
 
+def login(password):
+    password_hash = hashlib.sha256(password.encode()).hexdigest()
+    my_db = DB()
+    hash_password = my_db.get_password_hash()
 
-def login(password, hash_password):
-    password_hash = hashlib.sha256(password.encode()).digest()
     if password_hash == hash_password:
         print('heslo je spravne')
+        user = dict()
+        user['user_id'] = my_db.getID()
+        user['public_key'] = my_db.getPublicKey()
+        user['private_key'] = my_db.getPrivateKey()
+        return user
     else:
         print('neplatne heslo')
+        return False
+
+
+def save_user_to_db(user_id, public_key, private_key, password):
+    password_hash = hashlib.sha256(password.encode()).hexdigest()
+    my_db = DB()
+    my_db.createUser(user_id, public_key, private_key, password_hash)
 
 
 if __name__ == '__main__':
