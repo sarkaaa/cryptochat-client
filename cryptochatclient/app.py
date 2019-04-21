@@ -205,10 +205,8 @@ class CryptoChat(Gtk.Application):
         contact_id = self.builder.get_object(input_id).get_text()
         name = self.builder.get_object(input_name).get_text()
         if name != '' and contact_id != '':
-            # TODO ulozeni vytvoreneho kontaktu do DB
             create_contacts(self.user_id, int(contact_id), name, self.user_public_key)
-            print('contakty: ',  get_contacts(self.user_id, self.user_private_key))
-            self.contacts.append({"contact_id": contact_id, "alias": name, "selected": False})
+            self.contacts.append({"contact_id": int(contact_id), "alias": name, "selected": False})
             label = Gtk.Label()
             label.set_text(name)
             contact_item = self.builder.get_object("contact_list_box")
