@@ -14,15 +14,10 @@ from cryptochatclient.common import *
 class CryptoChat(Gtk.Application):
     """
     CryptoChat client GUI class.
-    :param error_text:
-    :return:
     """
-
     def __init__(self):
         """
         Init.
-        :param error_text:
-        :return:
         """
         self.builder = Gtk.Builder()
         root_dir = os.path.dirname(os.path.abspath(__file__))
@@ -51,16 +46,12 @@ class CryptoChat(Gtk.Application):
     def on_destroy(self):
         """
         On destroy function.
-        :param error_text:
-        :return:
         """
         Gtk.main_quit()
 
     def login(self, arg):
         """
         Login function.
-        :param error_text:
-        :returm:
         """
         self.login_window = self.builder.get_object('login_dialog')
         login_password = self.builder.get_object("login_password")
@@ -80,8 +71,6 @@ class CryptoChat(Gtk.Application):
     def logged(self):
         """
         Open main window after succesful login.
-        :param error_text:
-        :return:
         """
         self.load_contacts()
         self.load_conversations()
@@ -89,6 +78,9 @@ class CryptoChat(Gtk.Application):
         self.window.show_all()
 
     def load_contacts(self):
+        """
+        Load contacts from the DB.
+        """
         contacts_db = get_contacts(self.user_id, self.user_private_key)
         print('contacts: ', contacts_db)
         for contact in contacts_db:
@@ -100,6 +92,9 @@ class CryptoChat(Gtk.Application):
             contact_item.show_all()
 
     def load_conversations(self):
+        """
+        Load conversations from the DB.
+        """
         conversation_title = ''
         conversation = get_user_chats(self.user_id)
         listbox = self.builder.get_object("conversations_list")
@@ -123,10 +118,12 @@ class CryptoChat(Gtk.Application):
             new_item.show_all()
             listbox.add(new_item)
             self.load_sym_key_enc(conversation['id'])
-            listbox.connect('row-activated', self.on_row_activated(conversation['id'], self.conversations[conversation['id']]))
-            # listbox.connect('row-activated', lambda widget, row: self.on_row_activated(self.conversations[conversation]))
+            listbox.connect('row-activated', lambda widget, row: self.on_row_activated(conversation['id'], self.conversations[conversation['id']]))
 
     def load_sym_key_enc(self, chat_id):
+        """
+        Load symetric keys.
+        """
         chatinfo = get_chat(chat_id)
         for user, sym_key in zip(chatinfo['users'], chatinfo['sym_key_enc_by_owners_pub_keys']):
             if self.user_id == user:
@@ -135,6 +132,9 @@ class CryptoChat(Gtk.Application):
 
 
     def create_new_user(self, button):
+        """
+        Create new user according the data in textinputs.
+        """
         user_id = self.builder.get_object("login_id")
         user_id_text = user_id.get_text()
         user_password = self.builder.get_object("login_password")
@@ -160,8 +160,6 @@ class CryptoChat(Gtk.Application):
     def on_text_view_set(self, input_message):
         """
         Set the messages in chat window.
-        :param error_text:
-        :return:
         """
         text_view = self.builder.get_object("chat_window")
         text_buffer = text_view.get_buffer()
@@ -181,8 +179,6 @@ class CryptoChat(Gtk.Application):
     def on_send_message_button_pressed(self, arg):
         """
         Send message.
-        :param error_text:
-        :return:
         """
         input_message = self.builder.get_object("message")
         input_message_text = input_message.get_text()
@@ -196,9 +192,7 @@ class CryptoChat(Gtk.Application):
 
     def contact_enter(self, arg):
         """
-        Add new contact to contact list.
-        :param error_text:
-        :return:
+        Enter function for adding new contact to contact list.
         """
         print('kontakts: ', get_contacts(self.user_id, self.user_private_key))
         self.add_contact("contact_id_text_input", "contact_name_text_input")
@@ -208,8 +202,6 @@ class CryptoChat(Gtk.Application):
     def add_contact(self, input_id, input_name):
         """
         Show dialog for adding new contact/conversation.
-        :param error_text:
-        :return:
         """
         contact_id = self.builder.get_object(input_id).get_text()
         name = self.builder.get_object(input_name).get_text()
@@ -227,9 +219,7 @@ class CryptoChat(Gtk.Application):
 
     def on_row_activated(self, conversation_id, conversation):
         """
-        Show dialog for adding new contact/conversation.
-        :param error_text:
-        :return:
+        Show messages after activated conversation row.
         """
         # Vyber chatu podle id
         print('konverzace:', conversation)
@@ -249,6 +239,9 @@ class CryptoChat(Gtk.Application):
         #     text_buffer.insert(end_iter, messages)
 
     def get_updated_messages(self, button):
+        """
+        Show messages after update button activated.
+        """
         self.on_row_activated()
 
     def add_contact_conv(self, button):
