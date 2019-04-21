@@ -118,7 +118,7 @@ class CryptoChat(Gtk.Application):
             new_item.show_all()
             listbox.add(new_item)
             self.load_sym_key_enc(conversation['id'])
-            listbox.connect('row-activated', lambda widget, row: self.on_row_activated(conversation['id'], self.conversations[conversation['id']]))
+            listbox.connect('row-selected', lambda widget, row: self.on_row_activated(conversation['id'], self.conversations[conversation['id']]))
 
     def load_sym_key_enc(self, chat_id):
         """
@@ -157,44 +157,40 @@ class CryptoChat(Gtk.Application):
             self.login_window.hide()
             self.logged()
 
-    def on_text_view_set(self, input_message):
+    def on_text_view_set(self, messages):
         """
         Set the messages in chat window.
         """
         text_view = self.builder.get_object("chat_window")
         text_buffer = text_view.get_buffer()
+        text_buffer.set_text("")
         end_iter = text_buffer.get_end_iter()
-        if input_message:
-            text_buffer.insert(end_iter, '\n\nMe:\n' + input_message)
+        text_input = self.builder.get_object("message")
+        text_input.set_text("")
+        for message in messages:
+            if message['sender_id'] == self.user_id:
+                text_buffer.insert(end_iter, '\n\nMe:\n' + message['message'])
+            else:
+                text_buffer.insert(end_iter, message['sender_id'] + ':\n' + message['message'])
 
-    def update_messages(self):
-        # TODO
-        text_view = self.builder.get_object("chat_window")
-        text_buffer = text_view.get_buffer()
-        end_iter = text_buffer.get_end_iter()
-        messages = get_messages()  # TODO
-        if messages:
-            text_buffer.insert(end_iter, messages)
+    def update_messages(self, conversation_id):
+        messages = get_messages(conversation_id, 0, self.conversations[conversation_id]['sym_key'], self.user_private_key)
+        self.on_text_view_set(messages)
 
     def on_send_message_button_pressed(self, arg):
         """
         Send message.
         """
         input_message = self.builder.get_object("message")
-        input_message_text = input_message.get_text()
+        input_message_text = str(input_message.get_text())
         # TODO: vlozeni zpravy do databaze
-        #  chat_id, sender_id, message,
-        #                  symmetric_key_encrypted_by_own_pub_key, owner_private_key
-        # send_message(chat_id, self.user_id, input_message_text, symmetric_key_encrypted_by_own_pub_key,
-                    # self.user_private_key)
-        self.on_text_view_set(input_message_text)
-        return (self.builder.get_object("message").set_text(''), arg)
+        print('blaaa', send_message(3, self.user_id, input_message_text, self.conversations[3]['sym_key'], self.user_private_key))
+        self.update_messages(3)
 
     def contact_enter(self, arg):
         """
         Enter function for adding new contact to contact list.
         """
-        print('kontakts: ', get_contacts(self.user_id, self.user_private_key))
         self.add_contact("contact_id_text_input", "contact_name_text_input")
         dialog = self.builder.get_object('dialog_contact')
         dialog.hide()
@@ -227,11 +223,13 @@ class CryptoChat(Gtk.Application):
         print('MESSAGES', get_messages(conversation_id, 0, self.conversations[conversation_id]['sym_key'],
                  self.user_private_key))
 
-        text_view = self.builder.get_object("chat_window")
-        text_buffer = text_view.get_buffer()
-        text_buffer.set_text("")
-        end_iter = text_buffer.get_end_iter()
-        text_buffer.insert(end_iter, "hello world\n" + str(random.randint(1,101)))
+        self.update_messages()
+        # text_view = self.builder.get_object("chat_window")
+        # text_buffer = text_view.get_buffer()
+        # text_buffer.set_text("")
+        # end_iter = text_buffer.get_end_iter()
+        # text_buffer.insert(end_iter, "hello world\n" + str(random.randint(1,101)))
+
         # end_iter = text_buffer.get_end_iter()
         # messages = get_messages() # TODO
         # if messages:
@@ -242,7 +240,7 @@ class CryptoChat(Gtk.Application):
         """
         Show messages after update button activated.
         """
-        self.on_row_activated()
+        self.update_messages()
 
     def add_contact_conv(self, button):
         """
@@ -285,7 +283,7 @@ class CryptoChat(Gtk.Application):
         children = conversation.get_children()
         for element in children:
             if element.get_name() == 'GtkCheckButton':
-                conversation.remove(element);
+                conversation.remove(element)
 
     def on_new_conversation_button_pressed(self, arg):
         """
