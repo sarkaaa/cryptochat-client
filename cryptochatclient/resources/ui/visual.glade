@@ -580,7 +580,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_stock">gtk-execute</property>
-                <property name="show_emoji_icon">True</property>
                 <signal name="activate" handler="on_send_message_button_pressed" swapped="no"/>
               </object>
               <packing>
