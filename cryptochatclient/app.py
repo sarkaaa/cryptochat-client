@@ -4,7 +4,6 @@ CryptoChat client main module.
 import os
 from gi.repository import Gtk
 import gi
-import random
 from urllib.error import HTTPError, URLError
 
 gi.require_version("Gtk", "3.0")
