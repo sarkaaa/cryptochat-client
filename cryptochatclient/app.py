@@ -234,14 +234,14 @@ class CryptoChat(Gtk.Application):
         # Vyber chatu podle id
         print('konverzace:', conversation)
         print('konverzace:', conversation_id)
-        print('MESSAGES', get_messages(conversation_id, 0, conversation[conversation_id]['sym_key_enc_by_owners_pub_keys'],
+        print('MESSAGES', get_messages(conversation_id, 0, self.conversations[conversation_id]['sym_key'],
                  self.user_private_key))
 
         text_view = self.builder.get_object("chat_window")
         text_buffer = text_view.get_buffer()
         text_buffer.set_text("")
         end_iter = text_buffer.get_end_iter()
-        text_buffer.insert(end_iter, "hello world\n" + str(random.randint(1,101)) + 'id' +  str(conversation['id']))
+        text_buffer.insert(end_iter, "hello world\n" + str(random.randint(1,101)))
         # end_iter = text_buffer.get_end_iter()
         # messages = get_messages() # TODO
         # if messages:
