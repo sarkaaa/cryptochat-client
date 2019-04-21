@@ -165,11 +165,14 @@ class CryptoChat(Gtk.Application):
         end_iter = text_buffer.get_end_iter()
         text_input = self.builder.get_object("message")
         text_input.set_text("")
+        print('USEER', )
         for message in messages:
             if message['sender_id'] == self.user_id:
                 text_buffer.insert(end_iter, '\n\nMe:\n' + message['message'])
             else:
-                text_buffer.insert(end_iter, message['sender_id'] + ':\n' + message['message'])
+                for user in get_contacts(self.user_id, self.user_private_key):
+                    if user['user_id'] == message['sender_id']:
+                        text_buffer.insert(end_iter, '\n' + user['alias'] + ':\n' + message['message'])
 
     def update_messages(self):
         messages = get_messages(self.selected_conversation,
