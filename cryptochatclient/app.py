@@ -212,7 +212,6 @@ class CryptoChat(Gtk.Application):
             contact_item = self.builder.get_object("contact_list_box")
             contact_item.add(label)
             contact_item.show_all()
-            print('self,', self.contacts)
         self.builder.get_object(input_name).set_text('')
         self.builder.get_object(input_id).set_text('')
 
@@ -243,8 +242,7 @@ class CryptoChat(Gtk.Application):
 
         response = create_chat(user_ids)
         self.conversations[response['chat_id']] = {"user_ids": user_ids}
-        print('RESPONSEEEE', response)
-
+        self.selected_conversation = response['chat_id']
         label = Gtk.Label()
         label.set_text(conv_name)
         new_item = Gtk.ListBoxRow()
@@ -252,6 +250,7 @@ class CryptoChat(Gtk.Application):
         new_item.show_all()
         listbox = self.builder.get_object("conversations_list")
         listbox.add(new_item)
+        self.load_sym_key_enc(response['chat_id'])
         listbox.connect('row-activated', lambda widget, row: self.on_row_activated(response['chat_id']))
 
     def change_selected(self, name, value):
