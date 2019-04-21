@@ -122,7 +122,15 @@ class CryptoChat(Gtk.Application):
             new_item.add(label)
             new_item.show_all()
             listbox.add(new_item)
+            self.load_sym_key_enc(conversation['id'])
             listbox.connect('row-activated', lambda widget, row: self.on_row_activated(conversation))
+
+    def load_sym_key_enc(self, chat_id):
+        chatinfo = get_chat(chat_id)
+        for user, sym_key in zip(chatinfo['users'], chatinfo['sym_key_enc_by_owners_pub_keys']):
+            if self.user_id == user:
+                self.conversations[chat_id]['sym_key'] = sym_key
+                break
 
 
     def create_new_user(self, button):
@@ -223,9 +231,8 @@ class CryptoChat(Gtk.Application):
         :return:
         """
         # Vyber chatu podle id
-        print('konverzace:' , self.conversations)
-        print('MESSAGES', get_messages(conversation['id'], cursor,
-                 symmetric_key_encrypted_by_own_pub_key,
+        print('konverzace:', conversation)
+        print('MESSAGES', get_messages(conversation['id'], 0, conversation['sym_key_enc_by_owners_pub_keys'],
                  self.user_private_key))
 
         text_view = self.builder.get_object("chat_window")
