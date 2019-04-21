@@ -97,7 +97,7 @@ class CryptoChat(Gtk.Application):
             label.set_text(contact['alias'])
             contact_item = self.builder.get_object("contact_list_box")
             contact_item.add(label)
-        contact_item.show_all()
+            contact_item.show_all()
 
     def load_conversations(self):
         conversation_title = ''
@@ -117,11 +117,12 @@ class CryptoChat(Gtk.Application):
                             conversation_title = conversation_title + str(', ' + contact['alias'])
                     label = Gtk.Label()
                     label.set_text(conversation_title)
+            conversation_title = ''
             new_item = Gtk.ListBoxRow()
             new_item.add(label)
             new_item.show_all()
             listbox.add(new_item)
-            listbox.connect('row-activated', lambda widget, row: self.on_row_activated())
+            listbox.connect('row-activated', lambda widget, row: self.on_row_activated(conversation))
 
     def create_new_user(self, button):
         user_id = self.builder.get_object("login_id")
@@ -216,19 +217,23 @@ class CryptoChat(Gtk.Application):
         self.builder.get_object(input_name).set_text('')
         self.builder.get_object(input_id).set_text('')
 
-    def on_row_activated(self):
+    def on_row_activated(self, conversation):
         """
         Show dialog for adding new contact/conversation.
         :param error_text:
         :return:
         """
         # Vyber chatu podle id
+        print('konverzace:' , self.conversations)
+        print('MESSAGES', get_messages(conversation['id'], cursor,
+                 symmetric_key_encrypted_by_own_pub_key,
+                 self.user_private_key))
 
         text_view = self.builder.get_object("chat_window")
         text_buffer = text_view.get_buffer()
         text_buffer.set_text("")
         end_iter = text_buffer.get_end_iter()
-        text_buffer.insert(end_iter, "hello world\n" + str(random.randint(1,101)))
+        text_buffer.insert(end_iter, "hello world\n" + str(random.randint(1,101)) + 'id' +  str(conversation['id']))
         # end_iter = text_buffer.get_end_iter()
         # messages = get_messages() # TODO
         # if messages:
