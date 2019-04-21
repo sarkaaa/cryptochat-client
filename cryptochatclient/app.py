@@ -123,7 +123,7 @@ class CryptoChat(Gtk.Application):
             new_item.show_all()
             listbox.add(new_item)
             self.load_sym_key_enc(conversation['id'])
-            listbox.connect('row-activated', lambda widget, row: self.on_row_activated(conversation))
+            listbox.connect('row-activated', lambda widget, row: self.on_row_activated(self.conversations[conversation]))
 
     def load_sym_key_enc(self, chat_id):
         chatinfo = get_chat(chat_id)
@@ -232,7 +232,7 @@ class CryptoChat(Gtk.Application):
         """
         # Vyber chatu podle id
         print('konverzace:', conversation)
-        print('MESSAGES', get_messages(conversation['id'], 0, conversation['sym_key_enc_by_owners_pub_keys'],
+        print('MESSAGES', get_messages(conversation['id'], 0, conversation['id']['sym_key_enc_by_owners_pub_keys'],
                  self.user_private_key))
 
         text_view = self.builder.get_object("chat_window")
