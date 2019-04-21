@@ -238,7 +238,12 @@ class CryptoChat(Gtk.Application):
                 i["selected"] = False
                 conv_name += i["alias"] + ', '
 
-        response = create_chat(user_ids)
+        try:
+           response = create_chat(user_ids)
+        except (URLError, HTTPError) as e:
+            error_message = 'Nelze pridat uzivatele.'
+            return
+
         self.conversations[response['chat_id']] = {"user_ids": user_ids}
         self.selected_conversation = response['chat_id']
         label = Gtk.Label()
