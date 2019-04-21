@@ -79,7 +79,6 @@ class CryptoChat(Gtk.Application):
         Load contacts from the DB.
         """
         contacts_db = get_contacts(self.user_id, self.user_private_key)
-        print('contacts: ', contacts_db)
         for contact in contacts_db:
             self.contacts.append({"contact_id": contact['user_id'], "alias": contact['alias'], "selected": False})
             label = Gtk.Label()
