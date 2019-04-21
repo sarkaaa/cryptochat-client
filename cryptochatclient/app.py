@@ -241,7 +241,6 @@ class CryptoChat(Gtk.Application):
         try:
            response = create_chat(user_ids)
         except (URLError, HTTPError) as e:
-            error_message = 'Nelze pridat uzivatele.'
             return
 
         self.conversations[response['chat_id']] = {"user_ids": user_ids}
