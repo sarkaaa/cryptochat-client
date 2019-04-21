@@ -124,12 +124,13 @@ class CryptoChat(Gtk.Application):
             listbox.add(new_item)
             listbox.connect('row-activated', lambda widget, row: self.on_row_activated(conversation))
 
+
     def create_new_user(self, button):
         user_id = self.builder.get_object("login_id")
         user_id_text = user_id.get_text()
         user_password = self.builder.get_object("login_password")
         user_password_text = user_password.get_text()
-        self.user_id = user_id_text
+        self.user_id = int(user_id_text)
         self.user_password = user_password_text
         if user_id_text and user_password_text:
             private_key_owner, public_key_owner = rsa_key_generation()
