@@ -39,9 +39,6 @@ class CryptoChat(Gtk.Application):
         my_db = DB()
         if my_db.user_exist():
             self.builder.get_object('create_button').set_sensitive(False)
-
-        # .signals.row_selected
-        # response = self.login_window.run()
         Gtk.main()
 
     def on_destroy(self):
@@ -112,12 +109,12 @@ class CryptoChat(Gtk.Application):
                     label = Gtk.Label()
                     label.set_text(conversation_title)
             conversation_title = ''
-            new_item = Gtk.ListBoxRow()
+            new_item = Gtk.Button()
             new_item.add(label)
             new_item.show_all()
             listbox.add(new_item)
             self.load_sym_key_enc(conversation['id'])
-            listbox.connect('row-selected', lambda widget, row: self.on_row_activated(conversation['id']))
+            new_item.connect("clicked", self.on_row_activated, conversation['id'])
 
     def load_sym_key_enc(self, chat_id):
         """
@@ -165,7 +162,6 @@ class CryptoChat(Gtk.Application):
         end_iter = text_buffer.get_end_iter()
         text_input = self.builder.get_object("message")
         text_input.set_text("")
-        print('USEER', )
         for message in messages:
             if message['sender_id'] == self.user_id:
                 text_buffer.insert(end_iter, '\n\nMe:\n' + message['message'])
@@ -218,7 +214,7 @@ class CryptoChat(Gtk.Application):
         self.builder.get_object(input_name).set_text('')
         self.builder.get_object(input_id).set_text('')
 
-    def on_row_activated(self, conversation_id):
+    def on_row_activated(self, button, conversation_id):
         """
         Show messages after activated conversation row.
         """
@@ -248,13 +244,13 @@ class CryptoChat(Gtk.Application):
         self.selected_conversation = response['chat_id']
         label = Gtk.Label()
         label.set_text(conv_name)
-        new_item = Gtk.ListBoxRow()
+        new_item = Gtk.Button()
         new_item.add(label)
         new_item.show_all()
         listbox = self.builder.get_object("conversations_list")
         listbox.add(new_item)
         self.load_sym_key_enc(response['chat_id'])
-        listbox.connect('row-activated', lambda widget, row: self.on_row_activated(response['chat_id']))
+        new_item.connect("clicked", self.on_row_activated, response['chat_id'])
 
     def change_selected(self, name, value):
         for i in self.contacts:
