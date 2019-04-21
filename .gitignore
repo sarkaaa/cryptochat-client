@@ -214,3 +214,6 @@ dmypy.json
 
 # Glade backup files
 cryptochatclient/resources/ui/*~
+
+# Application data
+.data/
