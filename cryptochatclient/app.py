@@ -123,7 +123,8 @@ class CryptoChat(Gtk.Application):
             new_item.show_all()
             listbox.add(new_item)
             self.load_sym_key_enc(conversation['id'])
-            listbox.connect('row-activated', lambda widget, row: self.on_row_activated(self.conversations[conversation]))
+            listbox.connect('row-activated', self.on_row_activated(conversation['id'], self.conversations[conversation['id']]))
+            # listbox.connect('row-activated', lambda widget, row: self.on_row_activated(self.conversations[conversation]))
 
     def load_sym_key_enc(self, chat_id):
         chatinfo = get_chat(chat_id)
@@ -224,7 +225,7 @@ class CryptoChat(Gtk.Application):
         self.builder.get_object(input_name).set_text('')
         self.builder.get_object(input_id).set_text('')
 
-    def on_row_activated(self, conversation):
+    def on_row_activated(self, conversation_id, conversation):
         """
         Show dialog for adding new contact/conversation.
         :param error_text:
@@ -232,7 +233,8 @@ class CryptoChat(Gtk.Application):
         """
         # Vyber chatu podle id
         print('konverzace:', conversation)
-        print('MESSAGES', get_messages(conversation['id'], 0, conversation['id']['sym_key_enc_by_owners_pub_keys'],
+        print('konverzace:', conversation_id)
+        print('MESSAGES', get_messages(conversation_id, 0, conversation[conversation_id]['sym_key_enc_by_owners_pub_keys'],
                  self.user_private_key))
 
         text_view = self.builder.get_object("chat_window")
